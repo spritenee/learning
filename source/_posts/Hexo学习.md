@@ -792,7 +792,7 @@ pie
 
       有个`git submodule update --remote --merge`命令，在主网站根目录下运行，可更新子模块并完成合并。
 
-      {% hideToggle}
+      {% hideToggle %}
 
       ​	`git submodule`：这是 Git 子模块命令，子模块允许你将 Git 仓库作为另一个 Git 仓库的子目录。
 
@@ -941,6 +941,10 @@ pie
    5. 当脚本结束时，你可以在 PowerShell 控制台中看到输出结果。
    
    注意，运行非熟悉来源的脚本时一定要小心，确定你理解脚本的功能，并确信它来自可信的来源。
+   
+   ---
+   
+   使用`hexo generate --debug`命令可找出生成过程中出现错误的文件。
    
    ---
    
