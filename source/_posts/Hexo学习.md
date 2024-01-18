@@ -969,4 +969,29 @@ pie
    
    ---
    
+   **子模块出错，删除再重装的步骤**：
    
+   Remove the submodule, then add it again.
+   
+   From the root of your project:
+   
+   ```plaintext
+   git submodule deinit -f themes/SimpleIntro/
+   rm -rf .git/modules/themes/SimpleIntro/
+   git rm -rf themes/SimpleIntro/
+   git submodule add https://github.com/gangjun06/SimpleIntro themes/SimpleIntro
+   git add -A
+   git commit -m "Fix submodule"
+   git push
+   ```
+
+如果提示
+
+```perl
+fatal: 'themes/DoIt' already exists in the index
+```
+
+using `git rm -r --cached projectfolder` and then removing the directory of the theme with `rm -rf themes/DoIt`.
+
+---
+
