@@ -3,6 +3,8 @@ title: Git学习笔记
 abbrlink: 8520
 date: 2024-01-02 00:00:00
 tags:
+lang: zh-CN
+cover: https://cdn.jsdelivr.net/gh/spritenee/images@main/Pico/202401/image-20240118152138155.png
 ---
 
 # Git学习笔记
@@ -1690,3 +1692,14 @@ dfa79db updated index.html with emergency fix
 
 Adding files with `--amend` works the same way as above. Just add them to the `staging environment` before committing.
 
+
+
+
+
+
+
+
+
+
+
+![image-20240118152138155](https://cdn.jsdelivr.net/gh/spritenee/images@main/Pico/202401/image-20240118152138155.png)

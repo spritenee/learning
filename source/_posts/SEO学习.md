@@ -3,6 +3,8 @@ title: SEO学习
 abbrlink: 33336
 date: 2024-01-12 00:00:00
 tags:
+lang: zh-CN
+cover: https://cdn.jsdelivr.net/gh/spritenee/images@main/Pico/202401/image-20240118152930633.png
 ---
 
 使用Hexo创建的站点，存储于Github并使用Vercel发布，这是一种非常流行的JAMStack（JavaScript，APIs和Markup）开发模式，它可以提供出色的加载性能，这对于SEO而言至关重要。
@@ -171,3 +173,18 @@ Google Search Console
 
 ---
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+![image-20240118152930633](https://cdn.jsdelivr.net/gh/spritenee/images@main/Pico/202401/image-20240118152930633.png)

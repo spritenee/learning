@@ -1,7 +1,9 @@
 ---
 title: ssh密钥对相关问题
 date: 2024-01-18 09:45:04
-tags: ssh, keygen, timed out,
+tags: [ssh, keygen, timed out]
+lang: zh-CN
+cover:
 ---
 
 可以在GitHub中添加多个公钥。这在你需要在多个设备（例如，你的个人电脑和工作电脑）上访问你的GitHub帐户时非常有用。每个设备都可以生成自己的一对SSH密钥，并将各自的公钥添加到Github账户的SSH keys设定中。这样，无论你使用哪台电脑，都可以安全地通过SSH访问你的GitHub帐户。

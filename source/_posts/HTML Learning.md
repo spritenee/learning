@@ -3,6 +3,8 @@ title: HTML学习笔记
 abbrlink: 34391
 date: 2024-01-15 00:00:00
 tags:
+lang: zh-CN
+cover: https://cdn.jsdelivr.net/gh/spritenee/images@main/Pico/202401/image-20240118152543323.png
 ---
 
 The HTML **element** is everything from the start tag to the end tag.
@@ -2030,3 +2032,20 @@ You can hide columns with the `visibility: collapse` property:
 ...
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+![image-20240118152543323](https://cdn.jsdelivr.net/gh/spritenee/images@main/Pico/202401/image-20240118152543323.png)

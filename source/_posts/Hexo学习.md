@@ -3,6 +3,8 @@ title: Hexo学习笔记
 abbrlink: 1257
 date: 2024-01-01 00:00:00
 tags:
+lang: zh-CN
+cover: https://cdn.jsdelivr.net/gh/spritenee/images@main/Pico/202401/image-20240118152249937.png
 ---
 
 ## 日期 / 时间格式
@@ -995,3 +997,160 @@ using `git rm -r --cached projectfolder` and then removing the directory of the 
 
 ---
 
+hexo generate 或在Github Actions同类步骤中出现`hideToggle`等 tag 未知或无法解析的问题，似乎只是 butterfly 等主题未能成功加载。只要解决主题（或作为submodule）的问题，即不再报错。
+
+---
+
+做一个**简易的github pages网站**，主要是自己的一些学习资料，发布成网页。
+
+在本地新建 LM 文件夹，`hexo init`，将原网站的 `package.json` 复制过来，`cnpm install` 安装网页所需模块依赖项。将butterfly作为submodule安装到`themes/butterfly`。
+
+`hexo generate` + `hexo server` 查看是否网站正常运行。
+
+`git init`
+
+在 .github 文件夹中新建 workflows 文件夹，建立以下 pages.yaml 文件：
+
+```
+name: Pages
+
+on:
+  push:
+    branches:
+      - main  # default branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+          # If your repository depends on submodule, please see: https://github.com/actions/checkout
+          fetch-depth: 0
+          submodules: 'true'
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Cache NPM dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-npm-cache
+          restore-keys: |
+            ${{ runner.OS }}-npm-cache
+      - name: Install Dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+  deploy:
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        with: 
+          branch: 'gh-pages'  # your deployment branch
+```
+
+代码出自 hexo 官网。更新了actions/checkout之类的版本。最后，因为网站数据上传到main分支，再从main分支发布到 gh-pages 分支，所以要在原代码基础上添加最后的
+
+`with: 
+   branch: 'gh-pages'  # your deployment branch`
+
+在 repo 的 settings pages 中，将 gh-pages 设置为 source
+
+![image-20240118120457215](https://cdn.jsdelivr.net/gh/spritenee/images@main/Pico/202401/image-20240118120457215.png)
+
+
+
+如果Actions报错： `deploy Branch "main" is not allowed to deploy to github-pages due to environment protection rules.`
+
+这表明，GitHub 的环境保护规则阻止了 "main" 分支被用于将内容部署到 GitHub Pages。
+
+解决这个问题，你需要修改 GitHub Actions 工作流中的 "deploy" 部分，使其使用 "gh-pages" 分支进行部署，而不是 "main" 分支。（如上最后部分已调整）
+
+保存后，下次运行此工作流时，GitHub 将会把构建结果推送到 "gh-pages" 分支，而不是 "main" 分支，从而避免触发这个错误。
+
+如果你已经做了这些调整但仍然遇到问题，请检查你的仓库设置，确保 "gh-pages" 分支已经被设置为 GitHub Pages 的服务分支。你可以在你的仓库主页，点击 "Settings" -> "Pages" -> "Source"，在那里你可以设置和检查 GitHub Pages 的服务分支。
+
+因为你的 GitHub Pages 环境保护规则正在阻止 "gh-pages" 分支被部署。你可以尝试在你的仓库的 "Settings" -> "Environments" 部分尝试编辑或删除名为 "github-pages" 的环境。
+
+如果没有环境显示，那么可能问题是在于文件 `.github/workflows/gh-pages.yml` 中。
+
+你可以尝试以下步骤：
+
+1. 首先，打开你的 `.github/workflows/gh-pages.yml` 文件。
+2. 然后找到以下内容：
+
+```yaml
+  environment:
+    name: github-pages
+    url: ${{ steps.deployment.outputs.page_url }}
+```
+
+​	将其更改为：
+
+```yaml
+  environment:
+    name: production
+    url: ${{ steps.deployment.outputs.page_url }}
+```
+
+​		然后再次运行 actions，看看问题是否解决。
+
+这样的更改是因为 "github-pages" 是一个特殊的环境，有可能触发额外的保护机制。通过将其更改为 "production" 或者其他非 "github-pages" 的名称，可能可以解决这个问题。
+
+> ***如何编辑名为 "github-pages" 的环境？***
+
+在 GitHub 上编辑环境的步骤如下：
+
+1. 进入你的 GitHub 仓库主页。
+
+2. 选择 "Settings" 选项。
+
+3. 在左侧导航栏找到 "Environments"，点击进入。
+
+4. 在展开的环境列表中，找到你想要编辑的 "github-pages" 环境，点击环境名进入详情。
+
+5. 你将看到 "Environment secrets" 和 "Protection rules" 两部分。这里，你可以编辑你的保护规则，如需要的审阅人数，是否开启超时等。你可以根据自己的需求进行设置。
+
+   为了解决你的问题，你可以尝试编辑 "Protection rules" 部分，将 "main" 分支加入到 "Branches" 列表，或者取消指定的任何保护规则。（我就是将 main 分支加入后即可正常部署）
+
+6. 完毕后点击 "Update protection rules" 进行保存。
+
+![image-20240118121243930](https://cdn.jsdelivr.net/gh/spritenee/images@main/Pico/202401/image-20240118121243930.png)
+
+![image-20240118121200975](https://cdn.jsdelivr.net/gh/spritenee/images@main/Pico/202401/image-20240118121200975.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+![image-20240118152249937](https://cdn.jsdelivr.net/gh/spritenee/images@main/Pico/202401/image-20240118152249937.png)
